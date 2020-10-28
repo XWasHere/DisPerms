@@ -3,14 +3,7 @@ const Void = (...crap) => {};
 const Discord = require('discord.js');
 const fs = require('fs');
 
-class DefPermMgr {
-  constructor(path = './db.json') {
-    this.path = path;
-  }
-  loadData(path = this.path) {
-    let readStream = new fs.ReadStream()
-  }
-}
+
 
 class PermissionManagerRole {
   constructor(role) {
