@@ -1,9 +1,5 @@
-const Void = (...crap) => {};
-
-const Discord = require('discord.js');
-const fs = require('fs');
-
-
-
-
-
+module.exports = {
+  PermissionManager: require('./PermissionManager.js'),
+  PermissionManagerRole: require('./PermissionManagerRole.js'),
+  
+}
