@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo need a sec"
+    "test": "test/test.js"
   },
   "keywords": [],
   "author": "X-San",
