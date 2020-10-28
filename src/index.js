@@ -1,5 +1,4 @@
 module.exports = {
   PermissionManager: require('./PermissionManager.js'),
-  PermissionManagerRole: require('./PermissionManagerRole.js'),
-  
-}
+  PermissionManagerRole: require('./PermissionManagerRole.js')
+};
