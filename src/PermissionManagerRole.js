@@ -10,3 +10,5 @@ class PermissionManagerRole {
     this.perms[permission] = value;
   }
 }
+
+module.exports = PermissionManagerRole;
