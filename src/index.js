@@ -5,17 +5,7 @@ const fs = require('fs');
 
 
 
-class PermissionManagerRole {
-  constructor(role) {
-    this.id = role.id;
-    this.priority = role.position;
-    this.perms = {};
-  }
-  setPerm(permission, value) {
-    this.perms[permission] = value;
-    
-  }
-}
+
 
 class PermissionManager {
   constructor(guild) {
