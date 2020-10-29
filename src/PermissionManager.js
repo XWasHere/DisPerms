@@ -1,17 +1,50 @@
 const Discord = require('discord.js');
 const PermissionManagerRole = require('./PermissionManagerRole');
 
+/**
+ * 
+ */
 class PermissionManager {
+  /**
+   * @param {Discord.Guild} [guild]
+   */
   constructor(guild) {
-    this.roles = {};
-    this.friendlyRoleIndex = [];
-    this.perms = {};
-    for (const [k,v] of guild.roles.cache) {
-      this.roles[k] = new PermissionManagerRole(v);
-      this.friendlyRoleIndex[v.position] = k;
-    };
+    if (guild) {
+      /**
+       * The Guild ID used to identify it
+       * @type {String}
+       */
+      this.guild = guild.id;
+
+      /**
+       * A collection of roles
+       * @type {Map<String, PermissionManagerRole>}
+       */
+      this.roles = {};
+
+      /**
+       * A little list of role ID's in order by position in the guild settings
+       * @type {String[]}
+       */
+      this.friendlyRoleIndex = [];
+
+      /**
+       * The permissions and roles that have them
+       */
+      this.perms = {};
+      for (const [k,v] of guild.roles.cache) {
+        this.roles[k] = new PermissionManagerRole(v);
+        this.friendlyRoleIndex[v.position] = k;
+      };
+    }
   }
-  setPermission(role, perm, value) {
+  /**
+   * Set a permission to a specific value for a role
+   * @param {Discord.Role | Discord.Snowflake | String} [role]
+   * @param {String} [perm]
+   * @param {Boolean} [value=true]
+   */
+  setPermission(role, perm, value = true) {
     var r = '0';
     if (role instanceof Discord.Role) {
       r = role.id;
@@ -24,6 +57,13 @@ class PermissionManager {
     }
     this.perms[perm].push(r);
   }
+
+  /**
+   * Gets a permission for a member
+   * @param {Discord.GuildMember} [member]
+   * @param {String} [perm]
+   * @returns {Boolean}
+   */
   getPermission(member, perm) {
     return member._roles.some(r=> this.perms[perm].includes(r))
   }

@@ -9,7 +9,9 @@ client.on('ready', () => {
 });
 
 client.on('message', (msg) => {
-  global.pmgr.getPermission(msg.member, 'invertedcode.test')
+  if (global.pmgr.getPermission(msg.member, 'invertedcode.test')) {
+    console.log('a');
+  }
 });
 
 async function main() {
@@ -19,6 +21,10 @@ async function main() {
   console.log(global.pmgr)
   global.pmgr.setPermission('767872345737658419', 'invertedcode.test', true)
   console.log(global.pmgr)
+  Perms.Save(global.pmgr, "./test/a.json");
+  global.pmgr = null;
+  global.pmgr = Perms.Load('./test/a.json');
+  console.log(global.pmgr);
 }
 
 main();
