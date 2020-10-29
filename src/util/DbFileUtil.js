@@ -1,4 +1,4 @@
-const PermissionManager = require('../PermissionManager.js');
+const PermissionManagerGuild = require('../PermissionManagerGuild.js');
 const PermissionManagerRole = require('../PermissionManagerRole.js');
 const fs = require('fs');
 
@@ -21,7 +21,7 @@ function save(db, file) {
  * @returns {PermissionManager}
  */
 function load(file) {
-  db = new PermissionManager(null);
+  db = new PermissionManagerGuild(null);
   dbbuffer = fs.readFileSync(file);
   dbdata = JSON.parse(dbbuffer);
   db.guild = dbdata.guild;

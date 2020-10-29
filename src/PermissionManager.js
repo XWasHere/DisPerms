@@ -1,71 +1,62 @@
 const Discord = require('discord.js');
-const PermissionManagerRole = require('./PermissionManagerRole');
+const PermissionManagerGuild = require('./PermissionManagerGuild.js');
+const PermissionManagerRole  = require('./PermissionManagerRole.js');
+const dbsl = require('./util/DbFileUtil.js');
+const {DatabaseAlreadyLoadedError} = require('./util/errors');
+const fs = require('fs');
+const debug = true;
+const log = (data) => {if (debug) console.log(data);};
 
-/**
- * 
- */
 class PermissionManager {
   /**
-   * @param {Discord.Guild} [guild]
+   * Initalize a PermissionManager
+   * @param {Discord.Client} [clientapp]
    */
-  constructor(guild) {
-    if (guild) {
-      /**
-       * The Guild ID used to identify it
-       * @type {String}
-       */
-      this.guild = guild.id;
+  constructor(clientapp, options = {}) {
+    this._client = clientapp;
 
-      /**
-       * A collection of roles
-       * @type {Map<String, PermissionManagerRole>}
-       */
-      this.roles = {};
-
-      /**
-       * A little list of role ID's in order by position in the guild settings
-       * @type {String[]}
-       */
-      this.friendlyRoleIndex = [];
-
-      /**
-       * The permissions and roles that have them
-       */
-      this.perms = {};
-      for (const [k,v] of guild.roles.cache) {
-        this.roles[k] = new PermissionManagerRole(v);
-        this.friendlyRoleIndex[v.position] = k;
-      };
-    }
-  }
-  /**
-   * Set a permission to a specific value for a role
-   * @param {Discord.Role | Discord.Snowflake | String} [role]
-   * @param {String} [perm]
-   * @param {Boolean} [value=true]
-   */
-  setPermission(role, perm, value = true) {
-    var r = '0';
-    if (role instanceof Discord.Role) {
-      r = role.id;
-    } else {
-      r = role;
-    }
-    this.roles[r].setPerm(perm, value);
-    if (this.perms[perm] == null) {
-      this.perms[perm] = [];
-    }
-    this.perms[perm].push(r);
+    this.databasePath = options.dbdir ?? './pdatabase/';
+    this.databases = {};
+    this.databasetimeout = options.dbtimeout ?? 100000;
+    console.log(this.databasetimeout)
+    if (!fs.existsSync(this.databasePath)) fs.mkdirSync(this.databasePath);
   }
 
-  /**
-   * Gets a permission for a member
-   * @param {Discord.GuildMember} [member]
-   * @param {String} [perm]
-   * @returns {Boolean}
-   */
-  getPermission(member, perm) {
-    return member._roles.some(r=> this.perms[perm].includes(r))
+  loadDatabase(guild) {
+    if (this.databases[guild.id]) {
+      throw DatabaseAlreadyLoadedError;
+    }
+    this.databases[guild.id] = dbsl.load(this.databasePath + guild.id);
+    this.databases[guild.id].setTimeout(this.databasetimeout);
+    this.databases[guild.id]._startTimeout();
+    return this.databases[guild.id];
+  }
+
+  unloadDatabase(guild) {
+    if (!this.databases[guild.id]) throw DatabaseNotLoadedError;
+    dbsl.save(this.databases[guild.id], this.databasePath + guild.id);
+    delete this.databases[guild.id];
+  }
+
+  hasDatabase(guild) {
+    return (this.databases[guild.id]);
+  }
+
+  getDatabase(guild) {
+    return this.databases[guild.id];
+  }
+
+  initDatabase(guild) {
+    this.databases[guild.id] = new PermissionManagerGuild(guild, this.databasetimeout);
+    dbsl.save(this.databases[guild.id], this.databasePath + guild.id);
+    return this.databases[guild.id];
+  }
+
+  _hookToDie(a) {
+    a.signals.on('die', () => {
+      dbsl.save(a, a.guild);
+      delete this.databases[a.guild];
+    })
   }
 }
 
