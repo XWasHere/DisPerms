@@ -25,7 +25,7 @@ class PermissionManager {
     this.perms[perm].push(r);
   }
   getPermission(member, perm) {
-    
+    return member._roles.some(r=> this.perms[perm].includes(r))
   }
 }
 

@@ -1,10 +1,10 @@
 {
-  "name": "DisPerms",
+  "name": "@invertedcode/discordperms",
   "version": "1.0.0",
-  "description": "",
-  "main": "src/index.js",
+  "description": "A library for making custom permissions in discord. Due to being very early in development, Things may break due to many things being added as time passes.",
+  "main": "./src/index.js",
   "scripts": {
-    "test": "test/test.js"
+    "test": "node ./test/test.js"
   },
   "keywords": [],
   "author": "X-San",
