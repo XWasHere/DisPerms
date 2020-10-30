@@ -4,7 +4,8 @@
   "description": "A library for making custom permissions in discord. Due to being very early in development, Things may break due to many things being added as time passes.",
   "main": "./src/index.js",
   "scripts": {
-    "test": "./bin/node ./test/test.js"
+    "test": "node ./test/test.js",
+    "repltest": "./bin/node ./test/test.js"
   },
   "repository": {
     "type": "git",
