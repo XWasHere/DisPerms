@@ -22,7 +22,7 @@ async function main() {
   const Permissions = new Perms.PermissionManager(client);
   global.Permissions = Permissions;
 
-  setTimeout(()=>{process.exit(0)}, 1000); //if it works thats the only thing i care about lmao... i need a real test script
+  setTimeout(()=>{process.exit(0)}, 1000); //if it works thats the only thing i care about lmao... i need a real test script.
 }
 
 main();
