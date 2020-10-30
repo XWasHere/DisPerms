@@ -6,6 +6,8 @@ name: Node.js Publish
 on:
   release:
     types: [created]
+  workflow_dispatch:
+    
 
 jobs:
   build:
@@ -17,7 +19,8 @@ jobs:
           node-version: 12
       - run: npm ci
       - run: npm test
-
+        env:
+          dtoken: ${{ secrets.TEST_BOT_TOKEN }}
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
