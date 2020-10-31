@@ -15,6 +15,7 @@ client.on('message', (msg) => {
   } catch {
     global.Permissions.initDatabase(msg.guild);
   }
+  
 });
 
 async function main() {

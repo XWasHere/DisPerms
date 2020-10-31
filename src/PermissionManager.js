@@ -17,8 +17,8 @@ class PermissionManager {
 
     this.databasePath = options.dbdir ?? './pdatabase/';
     this.databases = {};
+    this.databasesDie = options.hasTimeout ?? true;
     this.databasetimeout = options.dbtimeout ?? 100000;
-    console.log(this.databasetimeout)
     if (!fs.existsSync(this.databasePath)) fs.mkdirSync(this.databasePath);
   }
 
@@ -27,8 +27,12 @@ class PermissionManager {
       throw DatabaseAlreadyLoadedError;
     }
     this.databases[guild.id] = dbsl.load(this.databasePath + guild.id);
-    this.databases[guild.id].setTimeout(this.databasetimeout);
-    this.databases[guild.id]._startTimeout();
+    this.databases[guild.id].dies = false;
+    if (this.databasesDie) {
+      this.databases[guild.id].dies = true;
+      this.databases[guild.id].setTimeout(this.databasetimeout);
+      this.databases[guild.id]._startTimeout();
+    }
     return this.databases[guild.id];
   }
 

@@ -54,11 +54,13 @@ class PermissionManagerGuild {
     this.timeout = timeout;
   }
   _startTimeout() {
-    this.timeoutTimer = setTimeout(this.die, this.timeout);
+    if (dies) this.timeoutTimer = setTimeout(this.die, this.timeout);
   }
   _resetTimeout() {
-    clearTimeout(this.timeoutTimer);
-    this._startTimeout();
+    if (dies) {
+      clearTimeout(this.timeoutTimer);
+      this._startTimeout();
+    }
   }
   /**
    * Set a permission to a specific value for a role
@@ -78,6 +80,7 @@ class PermissionManagerGuild {
       this.perms[perm] = [];
     }
     this.perms[perm].push(r);
+    this._resetTimeout();
   }
 
   /**
@@ -87,7 +90,8 @@ class PermissionManagerGuild {
    * @returns {Boolean}
    */
   getPermission(member, perm) {
-    return member._roles.some(r=> this.perms[perm].includes(r))
+    this._resetTimeout();
+    return member._roles.some(r=> this.perms[perm].includes(r));
   }
 
   die() {
