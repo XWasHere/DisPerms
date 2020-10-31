@@ -19,7 +19,6 @@
   "author": "X-San",
   "license": "MIT",
   "dependencies": {
-    "discord.js": "^12.4.1",
-    "node": "^15.0.1"
+    "discord.js": "^12.4.1"
   }
 }
