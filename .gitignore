@@ -1,0 +1,6 @@
+.replit
+test/a.json
+src/DefPermManager
+bin/*
+pdatabase/*
+repl/*
